@@ -1,0 +1,27 @@
+
+> auth0-context-assistant@1.0.0 test
+> node --test tests/*.test.js
+
+✔ a weather question uses first-party settings then the third-party weather API (2.853513ms)
+✔ changing the usual city is reflected in the next weather call (0.547659ms)
+✔ a calendar request triggers the Token Vault exchange path (0.278806ms)
+✔ health is public and reports demo mode (17.395733ms)
+✔ settings require authentication when demo mode is off (3.568711ms)
+✔ demo bearer can read settings and complete a weather conversation (2030.088744ms)
+✔ demo mode is detected from AUTH_DEMO=1 (0.600111ms)
+✔ demo mode returns the local mock user without a real JWT (0.249163ms)
+✔ non-demo mode rejects a missing bearer token (0.583551ms)
+✔ new users receive default first-party settings (1.430285ms)
+✔ updateSettings only accepts known fields and valid units (0.235484ms)
+✔ isConfigured is false when client credentials are missing (0.656598ms)
+✔ buildExchangeRequest matches the official Auth0 Token Vault access-token exchange (0.172968ms)
+✔ exchangeToken uses a labelled local mock when Token Vault is not configured (0.257737ms)
+✔ exchangeToken posts the official payload when configured (1.360667ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2291.904429
