@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tip Calculator • Cursor Mini App</title>
+    <style>
+      :root {
+        --bg: #0b0c10;
+        --panel: #12151b;
+        --text: #e6e6e6;
+        --muted: #a0a6b0;
+        --accent: #4f46e5;
+        --accent-2: #22c55e;
+        --border: #222735;
+        --error: #ef4444;
+        --btn-bg: #1a1f2b;
+        --btn-active: #28324a;
+        --input-bg: #0f1320;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      }
+      html.light {
+        --bg: #f7f7fb;
+        --panel: #ffffff;
+        --text: #1b1f2a;
+        --muted: #475063;
+        --accent: #4338ca;
+        --accent-2: #16a34a;
+        --border: #e6e8ef;
+        --error: #dc2626;
+        --btn-bg: #f1f3f9;
+        --btn-active: #e5e8f5;
+        --input-bg: #fbfcff;
+        --shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+          Cantarell, Noto Sans, Helvetica Neue, Arial, Apple Color Emoji,
+          Segoe UI Emoji, Segoe UI Symbol;
+      }
+      .wrapper {
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 16px;
+      }
+      .app {
+        width: 100%;
+        max-width: 920px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .app-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(79,70,229,0.10), transparent 40%);
+      }
+      .title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .title .badge {
+        font-size: 12px;
+        color: white;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+      .mode-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .switch {
+        position: relative;
+        width: 54px;
+        height: 30px;
+        border-radius: 999px;
+        background: var(--btn-bg);
+        border: 1px solid var(--border);
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        cursor: pointer;
+      }
+      .knob {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: white;
+        transition: transform 0.22s ease;
+      }
+      html.light .knob {
+        transform: translateX(24px);
+      }
+      .app-body {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 0;
+      }
+      @media (max-width: 860px) {
+        .app-body { grid-template-columns: 1fr; }
+      }
+      .panel {
+        padding: 22px;
+      }
+      .left {
+        border-right: 1px solid var(--border);
+      }
+      @media (max-width: 860px) {
+        .left { border-right: none; border-bottom: 1px solid var(--border); }
+      }
+      .group {
+        margin-bottom: 18px;
+      }
+      .group:last-child { margin-bottom: 0; }
+      label {
+        display: block;
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .input {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid var(--border);
+        background: var(--input-bg);
+        padding: 12px 14px;
+        border-radius: 12px;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+      .input:focus-within {
+        border-color: color-mix(in oklab, var(--accent), white 12%);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 85%);
+      }
+      .input.invalid {
+        border-color: var(--error);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--error), transparent 85%);
+      }
+      .input .prefix, .input .suffix {
+        color: var(--muted);
+        font-weight: 700;
+        min-width: 16px;
+        text-align: center;
+      }
+      input[type="number"] {
+        width: 100%;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text);
+        font-size: 16px;
+        font-weight: 700;
+        appearance: textfield;
+      }
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        appearance: none;
+        margin: 0;
+      }
+      .tip-buttons {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+      }
+      @media (max-width: 540px) {
+        .tip-buttons { grid-template-columns: repeat(3, 1fr); }
+      }
+      .btn {
+        background: var(--btn-bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        cursor: pointer;
+        text-align: center;
+        transition: background 0.15s ease, transform 0.02s ease, border-color 0.15s ease;
+        user-select: none;
+      }
+      .btn:hover {
+        border-color: color-mix(in oklab, var(--accent), white 18%);
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .btn.active {
+        background: var(--btn-active);
+        border-color: color-mix(in oklab, var(--accent), white 22%);
+        color: white;
+      }
+      .btn.custom {
+        padding: 0;
+      }
+      .btn.custom .input {
+        border: none;
+        background: transparent;
+        padding: 8px 10px;
+        border-radius: 8px;
+      }
+      .error {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--error);
+        min-height: 16px;
+      }
+      .summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      @media (max-width: 540px) {
+        .summary { grid-template-columns: 1fr; }
+      }
+      .card {
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(34,41,61,0.25), transparent 45%),
+          var(--panel);
+        border-radius: 12px;
+        padding: 14px;
+      }
+      .card h3 {
+        margin: 0 0 8px;
+        font-size: 13px;
+        color: var(--muted);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+      }
+      .value {
+        font-size: 30px;
+        font-weight: 900;
+        letter-spacing: 0.2px;
+      }
+      .value.small {
+        font-size: 20px;
+        color: var(--muted);
+        font-weight: 800;
+      }
+      .footnote {
+        margin-top: 10px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .ghw {
+        color: var(--accent-2);
+        font-weight: 800;
+      }
+      .accent {
+        color: var(--accent);
+        font-weight: 800;
+      }
+      .footer {
+        border-top: 1px solid var(--border);
+        padding: 14px 22px;
+        font-size: 12px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="app" id="app">
+        <div class="app-header">
+          <div class="title">
+            <span style="font-size:18px">🧮</span>
+            <span>Tip Calculator</span>
+            <span class="badge">Cursor</span>
+          </div>
+          <div class="mode-toggle">
+            <span aria-hidden="true">🌙</span>
+            <div class="switch" id="modeSwitch" role="button" aria-pressed="false" aria-label="Toggle dark mode">
+              <div class="knob"></div>
+            </div>
+            <span aria-hidden="true">☀️</span>
+          </div>
+        </div>
+        <div class="app-body">
+          <div class="panel left">
+            <div class="group">
+              <label for="bill">Bill Amount</label>
+              <div class="input" id="billWrap">
+                <span class="prefix">$</span>
+                <input id="bill" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal" />
+              </div>
+              <div class="error" id="billErr"></div>
+            </div>
+
+            <div class="group">
+              <label>Tip</label>
+              <div class="tip-buttons" id="tipButtons">
+                <button class="btn" data-percent="10">10%</button>
+                <button class="btn" data-percent="12">12%</button>
+                <button class="btn active" data-percent="15">15%</button>
+                <button class="btn" data-percent="18">18%</button>
+                <button class="btn" data-percent="20">20%</button>
+                <div class="btn custom" title="Custom tip %">
+                  <div class="input" id="customWrap">
+                    <input id="customTip" type="number" min="0" step="1" placeholder="Custom %" inputmode="numeric" />
+                    <span class="suffix">%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="error" id="tipErr"></div>
+            </div>
+
+            <div class="group">
+              <div class="row">
+                <div>
+                  <label for="people">Number of People</label>
+                  <div class="input" id="peopleWrap">
+                    <input id="people" type="number" min="1" step="1" placeholder="1" inputmode="numeric" />
+                  </div>
+                  <div class="error" id="peopleErr"></div>
+                </div>
+                <div>
+                  <label for="round">Rounding</label>
+                  <div class="input">
+                    <select id="round" style="width:100%;background:transparent;border:none;outline:none;color:var(--text);font-weight:700">
+                      <option value="none">No rounding</option>
+                      <option value="total">Round total</option>
+                      <option value="perperson">Round per-person</option>
+                    </select>
+                  </div>
+                  <div class="error" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="summary">
+              <div class="card">
+                <h3>Tip</h3>
+                <div class="value" id="tipOut">$0.00</div>
+                <div class="footnote">at <span class="accent" id="tipPctOut">15%</span></div>
+              </div>
+              <div class="card">
+                <h3>Total</h3>
+                <div class="value" id="totalOut">$0.00</div>
+                <div class="footnote">Bill + Tip</div>
+              </div>
+              <div class="card">
+                <h3>Per Person</h3>
+                <div class="value" id="perPersonOut">$0.00</div>
+                <div class="footnote"><span id="peopleOut">1</span> people splitting</div>
+              </div>
+              <div class="card">
+                <h3>Breakdown</h3>
+                <div class="value small">Bill: <span id="billOut">$0.00</span></div>
+                <div class="value small">Tip/Person: <span id="tipPerPersonOut">$0.00</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer">
+          <div>Built with <span class="accent">Cursor</span> for <span class="ghw">MLH Global Hack Week: Builders Week</span>.</div>
+          <div><a href="README.md" target="_blank" rel="noopener">Open README</a></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        const els = {
+          bill: document.getElementById('bill'),
+          billErr: document.getElementById('billErr'),
+          billWrap: document.getElementById('billWrap'),
+          customTip: document.getElementById('customTip'),
+          customWrap: document.getElementById('customWrap'),
+          tipButtons: document.getElementById('tipButtons'),
+          tipErr: document.getElementById('tipErr'),
+          people: document.getElementById('people'),
+          peopleWrap: document.getElementById('peopleWrap'),
+          peopleErr: document.getElementById('peopleErr'),
+          round: document.getElementById('round'),
+          tipOut: document.getElementById('tipOut'),
+          tipPctOut: document.getElementById('tipPctOut'),
+          totalOut: document.getElementById('totalOut'),
+          perPersonOut: document.getElementById('perPersonOut'),
+          peopleOut: document.getElementById('peopleOut'),
+          billOut: document.getElementById('billOut'),
+          tipPerPersonOut: document.getElementById('tipPerPersonOut'),
+          modeSwitch: document.getElementById('modeSwitch'),
+        };
+
+        const currency = (function () {
+          try {
+            return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
+          } catch {
+            return { format: (n) => '$' + Number(n).toFixed(2) };
+          }
+        })();
+
+        const state = {
+          bill: 0,
+          tipPercent: 15,
+          people: 1,
+          rounding: 'none',
+          theme: 'dark',
+        };
+
+        // Theme setup
+        const savedTheme = localStorage.getItem('cursor-tip-theme');
+        const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+        if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
+          document.documentElement.classList.add('light');
+          state.theme = 'light';
+          els.modeSwitch.setAttribute('aria-pressed', 'true');
+        }
+
+        els.modeSwitch.addEventListener('click', () => {
+          const isLight = document.documentElement.classList.toggle('light');
+          state.theme = isLight ? 'light' : 'dark';
+          els.modeSwitch.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+          localStorage.setItem('cursor-tip-theme', state.theme);
+        });
+
+        function clampNumber(value, { min = -Infinity, max = Infinity, fallback = 0 }) {
+          const num = Number(value);
+          if (!Number.isFinite(num) || Number.isNaN(num)) return fallback;
+          if (num < min) return min;
+          if (num > max) return max;
+          return num;
+        }
+
+        function setActiveTipButton(percent) {
+          const buttons = els.tipButtons.querySelectorAll('button.btn[data-percent]');
+          buttons.forEach((b) => {
+            const p = Number(b.getAttribute('data-percent'));
+            b.classList.toggle('active', p === percent);
+          });
+        }
+
+        function update() {
+          // Validation + clamping
+          state.bill = clampNumber(els.bill.value, { min: 0, fallback: 0 });
+          state.people = Math.round(clampNumber(els.people.value || 1, { min: 1, fallback: 1 }));
+          state.rounding = els.round.value;
+          els.bill.value = state.bill === 0 ? '' : state.bill;
+          els.people.value = state.people;
+
+          // UI validation states
+          const billInvalid = Number(els.bill.value) < 0 || Number.isNaN(Number(els.bill.value));
+          els.billWrap.classList.toggle('invalid', billInvalid);
+          els.billErr.textContent = billInvalid ? 'Bill must be a number ≥ 0' : '';
+
+          const peopleInvalid = Number(els.people.value) < 1 || Number.isNaN(Number(els.people.value));
+          els.peopleWrap.classList.toggle('invalid', peopleInvalid);
+          els.peopleErr.textContent = peopleInvalid ? 'People must be a number ≥ 1' : '';
+
+          // Tip percent source: custom overrides buttons if set
+          const custom = clampNumber(els.customTip.value, { min: 0, fallback: NaN });
+          if (Number.isFinite(custom)) {
+            state.tipPercent = custom;
+            setActiveTipButton(NaN); // deactivate all
+          }
+
+          // Calculate
+          let tipAmount = (state.bill * state.tipPercent) / 100;
+          let total = state.bill + tipAmount;
+          if (state.rounding === 'total') {
+            total = Math.round(total * 100) / 100;
+            tipAmount = total - state.bill;
+          }
+          let perPerson = state.people > 0 ? total / state.people : total;
+          if (state.rounding === 'perperson') {
+            perPerson = Math.round(perPerson * 100) / 100;
+            total = perPerson * state.people;
+            tipAmount = total - state.bill;
+          }
+
+          // Render
+          els.tipOut.textContent = currency.format(tipAmount);
+          els.tipPctOut.textContent = `${Number(state.tipPercent).toFixed(0)}%`;
+          els.totalOut.textContent = currency.format(total);
+          els.perPersonOut.textContent = currency.format(perPerson);
+          els.peopleOut.textContent = String(state.people);
+          els.billOut.textContent = currency.format(state.bill);
+          els.tipPerPersonOut.textContent = currency.format(state.people > 0 ? tipAmount / state.people : tipAmount);
+
+          // Persist light state
+          try {
+            localStorage.setItem('cursor-tip-state', JSON.stringify({
+              bill: state.bill,
+              tipPercent: state.tipPercent,
+              people: state.people,
+              rounding: state.rounding,
+            }));
+          } catch {}
+        }
+
+        // Tip buttons
+        els.tipButtons.addEventListener('click', (e) => {
+          const btn = e.target.closest('button[data-percent]');
+          if (!btn) return;
+          const p = Number(btn.getAttribute('data-percent'));
+          if (!Number.isNaN(p)) {
+            state.tipPercent = p;
+            // Clear custom input when choosing preset
+            els.customTip.value = '';
+            setActiveTipButton(p);
+            update();
+          }
+        });
+
+        // Custom tip input live-debounced
+        let tipTimer = null;
+        els.customTip.addEventListener('input', () => {
+          if (tipTimer) cancelAnimationFrame(tipTimer);
+          tipTimer = requestAnimationFrame(update);
+        });
+
+        // Inputs
+        ['input', 'change'].forEach((evt) => {
+          els.bill.addEventListener(evt, update);
+          els.people.addEventListener(evt, update);
+          els.round.addEventListener(evt, update);
+        });
+
+        // Restore persisted state
+        try {
+          const saved = JSON.parse(localStorage.getItem('cursor-tip-state') || '{}');
+          if (typeof saved.bill === 'number') els.bill.value = saved.bill;
+          if (typeof saved.tipPercent === 'number') {
+            state.tipPercent = saved.tipPercent;
+            setActiveTipButton(saved.tipPercent);
+          }
+          if (typeof saved.people === 'number') els.people.value = saved.people;
+          if (typeof saved.rounding === 'string') els.round.value = saved.rounding;
+        } catch {}
+
+        // Initial paint
+        update();
+      })();
+    </script>
+  </body>
+</html>
+
