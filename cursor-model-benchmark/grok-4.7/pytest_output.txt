@@ -1,0 +1,17 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /workspace/cursor-model-benchmark/grok-4.7
+collecting ... collected 9 items
+
+test_reverse.py::test_empty_and_plain_text PASSED                        [ 11%]
+test_reverse.py::test_decomposed_combining_accent_stays_with_base PASSED [ 22%]
+test_reverse.py::test_precomposed_character PASSED                       [ 33%]
+test_reverse.py::test_two_combining_marks_on_one_base PASSED             [ 44%]
+test_reverse.py::test_emoji_and_skin_tone_are_one_cluster PASSED         [ 55%]
+test_reverse.py::test_flag_is_one_cluster PASSED                         [ 66%]
+test_reverse.py::test_zwj_family_is_one_cluster PASSED                   [ 77%]
+test_reverse.py::test_keycap_sequence PASSED                             [ 88%]
+test_reverse.py::test_double_reversal_is_identity PASSED                 [100%]
+
+============================== 9 passed in 0.02s ===============================
