@@ -1,0 +1,37 @@
+[
+  {
+    "id": "employee_handbook",
+    "title": "Northwind Labs Employee Handbook",
+    "department": "hr",
+    "sensitivity": "internal",
+    "text": "Welcome to Northwind Labs. Full-time employees receive 22 days of paid time off each calendar year, plus 10 company holidays. Remote work is allowed up to three days per week with manager approval. The code of conduct requires respectful communication and prohibits sharing confidential compensation data outside authorized channels. New hires complete onboarding in their first ten business days."
+  },
+  {
+    "id": "salary_band_2026",
+    "title": "2026 Engineering Salary Bands",
+    "department": "hr",
+    "sensitivity": "confidential",
+    "text": "These salary bands are confidential and intended for managers only. Level L3 cash compensation ranges from 90000 to 110000 USD. Level L4 ranges from 115000 to 145000 USD. Level L5 ranges from 150000 to 190000 USD. Level L6 ranges from 195000 to 240000 USD. Equity refreshers are reviewed annually in March. Hiring managers must stay inside the posted band unless People Ops approves an exception."
+  },
+  {
+    "id": "budget_Q4",
+    "title": "Q4 Operating Budget",
+    "department": "finance",
+    "sensitivity": "confidential",
+    "text": "The approved Q4 engineering operating budget is 1200000 USD. A hiring freeze applies to all teams except platform engineering, which may open two backend roles. Marketing spend is capped at 180000 USD. Travel requires VP approval above 2500 USD per trip. The finance team reviews actuals every two weeks against this plan."
+  },
+  {
+    "id": "legal_retention_policy",
+    "title": "Legal Document Retention Policy",
+    "department": "legal",
+    "sensitivity": "restricted",
+    "text": "Customer contracts are retained for seven years after the end date. Vendor agreements are retained for five years. Litigation hold notices suspend deletion until counsel releases the hold. Privilege logs are stored in the legal matter system and must not be copied into shared drives. Questions about retention go to the legal operations inbox."
+  },
+  {
+    "id": "exec_compensation",
+    "title": "Executive Compensation Summary",
+    "department": "hr",
+    "sensitivity": "restricted",
+    "text": "The CEO target cash compensation is 420000 USD with a 40 percent annual bonus target. The CTO target cash compensation is 310000 USD with a 30 percent bonus target. Change-in-control severance for C-level roles is twelve months of base salary. This document is visible only to managers."
+  }
+]

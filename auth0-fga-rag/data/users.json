@@ -1,0 +1,30 @@
+[
+  {
+    "id": "alice",
+    "name": "Alice Chen",
+    "title": "Finance Manager",
+    "role": "manager",
+    "department": "finance"
+  },
+  {
+    "id": "bob",
+    "name": "Bob Patel",
+    "title": "Software Engineer",
+    "role": "employee",
+    "department": "engineering"
+  },
+  {
+    "id": "carol",
+    "name": "Carol Diaz",
+    "title": "Counsel",
+    "role": "employee",
+    "department": "legal"
+  },
+  {
+    "id": "dave",
+    "name": "Dave Okonkwo",
+    "title": "HR Manager",
+    "role": "manager",
+    "department": "hr"
+  }
+]
