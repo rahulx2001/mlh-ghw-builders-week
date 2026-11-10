@@ -1,0 +1,26 @@
+{
+  "name": "privacy-aware-rag-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Privacy-aware RAG assistant that filters documents with OpenFGA / Auth0 FGA before retrieval.",
+  "scripts": {
+    "start": "tsx src/server.ts",
+    "test": "tsx --test --test-reporter=spec tests/*.test.ts",
+    "seed:fga": "tsx src/scripts/seed-fga.ts"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@openfga/sdk": "^0.9.1",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.23",
+    "@types/node": "^22.18.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
