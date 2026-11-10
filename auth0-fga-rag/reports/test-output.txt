@@ -1,0 +1,35 @@
+
+> privacy-aware-rag-bot@1.0.0 test
+> tsx --test --test-reporter=spec tests/*.test.ts
+
+TEST_AUTHZ_BACKEND=openfga-sdk (@openfga/sdk) -> local OpenFGA http://127.0.0.1:41681
+▶ OpenFGA SDK is installed and importable
+  ✔ exports OpenFgaClient (0.478597ms)
+✔ OpenFGA SDK is installed and importable (252.688585ms)
+▶ document-level FGA checks
+  ✔ allows a manager to view salary documents (2.917337ms)
+  ✔ denies a general employee access to salary documents (2.194685ms)
+  ✔ allows every employee to view the handbook (5.247989ms)
+  ✔ allows legal staff to view retention policy and denies engineering (3.592815ms)
+  ✔ lists only permitted document objects for bob (2.959691ms)
+✔ document-level FGA checks (17.47315ms)
+▶ privacy-aware retrieval happens before context building
+  ✔ never ranks salary documents for bob even when the query names them (3.963986ms)
+  ✔ includes salary documents for alice before answering (2.584539ms)
+  ✔ does not put denied documents into the responder context (4.884922ms)
+  ✔ lets both users read the public handbook policy (4.975404ms)
+  ✔ keeps legal retention details away from bob (3.941036ms)
+✔ privacy-aware retrieval happens before context building (20.908911ms)
+▶ deterministic local responder
+  ✔ is labelled as deterministic-local and not an LLM (0.146225ms)
+✔ deterministic local responder (0.255194ms)
+ℹ tests 12
+ℹ suites 4
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6325.310454
+---
+TEST_AUTHZ_BACKEND captured above. Command: npm test (tsx --test --test-reporter=spec tests/*.test.ts)
