@@ -1,0 +1,22 @@
+[
+  { "user": "user:alice", "relation": "assignee", "object": "role:manager" },
+  { "user": "user:alice", "relation": "member", "object": "department:finance" },
+  { "user": "user:bob", "relation": "assignee", "object": "role:employee" },
+  { "user": "user:bob", "relation": "member", "object": "department:engineering" },
+  { "user": "user:carol", "relation": "assignee", "object": "role:employee" },
+  { "user": "user:carol", "relation": "member", "object": "department:legal" },
+  { "user": "user:dave", "relation": "assignee", "object": "role:manager" },
+  { "user": "user:dave", "relation": "member", "object": "department:hr" },
+
+  { "user": "department:engineering#member", "relation": "viewer", "object": "document:employee_handbook" },
+  { "user": "department:finance#member", "relation": "viewer", "object": "document:employee_handbook" },
+  { "user": "department:legal#member", "relation": "viewer", "object": "document:employee_handbook" },
+  { "user": "department:hr#member", "relation": "viewer", "object": "document:employee_handbook" },
+
+  { "user": "role:manager#assignee", "relation": "viewer", "object": "document:salary_band_2026" },
+  { "user": "role:manager#assignee", "relation": "viewer", "object": "document:exec_compensation" },
+  { "user": "role:manager#assignee", "relation": "viewer", "object": "document:budget_Q4" },
+  { "user": "department:finance#member", "relation": "viewer", "object": "document:budget_Q4" },
+
+  { "user": "department:legal#member", "relation": "viewer", "object": "document:legal_retention_policy" }
+]
