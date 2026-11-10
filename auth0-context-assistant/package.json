@@ -1,0 +1,26 @@
+{
+  "name": "auth0-context-assistant",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "server": "node server/index.js",
+    "client": "vite --config client/vite.config.js",
+    "dev": "node server/index.js & vite --config client/vite.config.js",
+    "test": "node --test tests/*.test.js",
+    "build": "vite build --config client/vite.config.js"
+  },
+  "dependencies": {
+    "@auth0/auth0-react": "^2.30.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jose": "^5.9.6",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}
