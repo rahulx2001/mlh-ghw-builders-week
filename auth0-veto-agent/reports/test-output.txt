@@ -1,0 +1,15 @@
+
+> auth0-veto-agent@1.0.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /workspace/mlh-ghw/auth0-veto-agent
+
+ ✓ test/veto-agent.test.ts (3 tests) 16ms
+ ✓ test/local-responder.test.ts (4 tests) 3ms
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  19:25:58
+   Duration  587ms (transform 127ms, setup 0ms, collect 271ms, tests 19ms, environment 0ms, prepare 92ms)
+
