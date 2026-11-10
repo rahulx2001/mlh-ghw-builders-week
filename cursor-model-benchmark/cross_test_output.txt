@@ -1,0 +1,171 @@
+
+===== tester=composer-2.5 impl=composer-2.5 =====
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tmp/tmp.TH3LJPrgcg
+collecting ... collected 9 items
+
+test_reverse.py::test_empty_and_ascii PASSED                             [ 11%]
+test_reverse.py::test_combining_accent_decomposed PASSED                 [ 22%]
+test_reverse.py::test_precomposed_accent PASSED                          [ 33%]
+test_reverse.py::test_multiple_clusters_with_combining PASSED            [ 44%]
+test_reverse.py::test_emoji_single_codepoint PASSED                      [ 55%]
+test_reverse.py::test_emoji_skin_tone PASSED                             [ 66%]
+test_reverse.py::test_regional_indicator_flag PASSED                     [ 77%]
+test_reverse.py::test_zwj_emoji_sequence PASSED                          [ 88%]
+test_reverse.py::test_surrogate_pairs_roundtrip PASSED                   [100%]
+
+============================== 9 passed in 0.02s ===============================
+
+===== tester=composer-2.5 impl=grok-4.7 =====
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tmp/tmp.9xT3RSLb8w
+collecting ... collected 9 items
+
+test_reverse.py::test_empty_and_ascii PASSED                             [ 11%]
+test_reverse.py::test_combining_accent_decomposed PASSED                 [ 22%]
+test_reverse.py::test_precomposed_accent PASSED                          [ 33%]
+test_reverse.py::test_multiple_clusters_with_combining PASSED            [ 44%]
+test_reverse.py::test_emoji_single_codepoint PASSED                      [ 55%]
+test_reverse.py::test_emoji_skin_tone PASSED                             [ 66%]
+test_reverse.py::test_regional_indicator_flag PASSED                     [ 77%]
+test_reverse.py::test_zwj_emoji_sequence PASSED                          [ 88%]
+test_reverse.py::test_surrogate_pairs_roundtrip PASSED                   [100%]
+
+============================== 9 passed in 0.02s ===============================
+
+===== tester=composer-2.5 impl=gpt-5.4-mini =====
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tmp/tmp.RR3VPbdSZh
+collecting ... collected 9 items
+
+test_reverse.py::test_empty_and_ascii PASSED                             [ 11%]
+test_reverse.py::test_combining_accent_decomposed PASSED                 [ 22%]
+test_reverse.py::test_precomposed_accent PASSED                          [ 33%]
+test_reverse.py::test_multiple_clusters_with_combining PASSED            [ 44%]
+test_reverse.py::test_emoji_single_codepoint PASSED                      [ 55%]
+test_reverse.py::test_emoji_skin_tone PASSED                             [ 66%]
+test_reverse.py::test_regional_indicator_flag PASSED                     [ 77%]
+test_reverse.py::test_zwj_emoji_sequence PASSED                          [ 88%]
+test_reverse.py::test_surrogate_pairs_roundtrip PASSED                   [100%]
+
+============================== 9 passed in 0.02s ===============================
+
+===== tester=grok-4.7 impl=composer-2.5 =====
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tmp/tmp.aFwdpXJlqO
+collecting ... collected 9 items
+
+test_reverse.py::test_empty_and_plain_text PASSED                        [ 11%]
+test_reverse.py::test_decomposed_combining_accent_stays_with_base PASSED [ 22%]
+test_reverse.py::test_precomposed_character PASSED                       [ 33%]
+test_reverse.py::test_two_combining_marks_on_one_base PASSED             [ 44%]
+test_reverse.py::test_emoji_and_skin_tone_are_one_cluster PASSED         [ 55%]
+test_reverse.py::test_flag_is_one_cluster PASSED                         [ 66%]
+test_reverse.py::test_zwj_family_is_one_cluster PASSED                   [ 77%]
+test_reverse.py::test_keycap_sequence PASSED                             [ 88%]
+test_reverse.py::test_double_reversal_is_identity PASSED                 [100%]
+
+============================== 9 passed in 0.02s ===============================
+
+===== tester=grok-4.7 impl=grok-4.7 =====
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tmp/tmp.BvOJu5bKaP
+collecting ... collected 9 items
+
+test_reverse.py::test_empty_and_plain_text PASSED                        [ 11%]
+test_reverse.py::test_decomposed_combining_accent_stays_with_base PASSED [ 22%]
+test_reverse.py::test_precomposed_character PASSED                       [ 33%]
+test_reverse.py::test_two_combining_marks_on_one_base PASSED             [ 44%]
+test_reverse.py::test_emoji_and_skin_tone_are_one_cluster PASSED         [ 55%]
+test_reverse.py::test_flag_is_one_cluster PASSED                         [ 66%]
+test_reverse.py::test_zwj_family_is_one_cluster PASSED                   [ 77%]
+test_reverse.py::test_keycap_sequence PASSED                             [ 88%]
+test_reverse.py::test_double_reversal_is_identity PASSED                 [100%]
+
+============================== 9 passed in 0.02s ===============================
+
+===== tester=grok-4.7 impl=gpt-5.4-mini =====
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tmp/tmp.DVx5woqSFv
+collecting ... collected 9 items
+
+test_reverse.py::test_empty_and_plain_text PASSED                        [ 11%]
+test_reverse.py::test_decomposed_combining_accent_stays_with_base PASSED [ 22%]
+test_reverse.py::test_precomposed_character PASSED                       [ 33%]
+test_reverse.py::test_two_combining_marks_on_one_base PASSED             [ 44%]
+test_reverse.py::test_emoji_and_skin_tone_are_one_cluster PASSED         [ 55%]
+test_reverse.py::test_flag_is_one_cluster PASSED                         [ 66%]
+test_reverse.py::test_zwj_family_is_one_cluster PASSED                   [ 77%]
+test_reverse.py::test_keycap_sequence PASSED                             [ 88%]
+test_reverse.py::test_double_reversal_is_identity PASSED                 [100%]
+
+============================== 9 passed in 0.02s ===============================
+
+===== tester=gpt-5.4-mini impl=composer-2.5 =====
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tmp/tmp.BqEnv4BOsp
+collecting ... collected 9 items
+
+test_reverse.py::test_empty_and_ascii PASSED                             [ 11%]
+test_reverse.py::test_combining_mark_kept_with_base PASSED               [ 22%]
+test_reverse.py::test_precomposed_character PASSED                       [ 33%]
+test_reverse.py::test_multiple_combining_marks PASSED                    [ 44%]
+test_reverse.py::test_emoji_skin_tone_and_emoji PASSED                   [ 55%]
+test_reverse.py::test_flag_pair_stays_together PASSED                    [ 66%]
+test_reverse.py::test_zwj_sequence_stays_together PASSED                 [ 77%]
+test_reverse.py::test_keycap_sequence PASSED                             [ 88%]
+test_reverse.py::test_double_reverse_returns_original PASSED             [100%]
+
+============================== 9 passed in 0.01s ===============================
+
+===== tester=gpt-5.4-mini impl=grok-4.7 =====
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tmp/tmp.7NcdS5ANPk
+collecting ... collected 9 items
+
+test_reverse.py::test_empty_and_ascii PASSED                             [ 11%]
+test_reverse.py::test_combining_mark_kept_with_base PASSED               [ 22%]
+test_reverse.py::test_precomposed_character PASSED                       [ 33%]
+test_reverse.py::test_multiple_combining_marks PASSED                    [ 44%]
+test_reverse.py::test_emoji_skin_tone_and_emoji PASSED                   [ 55%]
+test_reverse.py::test_flag_pair_stays_together PASSED                    [ 66%]
+test_reverse.py::test_zwj_sequence_stays_together PASSED                 [ 77%]
+test_reverse.py::test_keycap_sequence PASSED                             [ 88%]
+test_reverse.py::test_double_reverse_returns_original PASSED             [100%]
+
+============================== 9 passed in 0.01s ===============================
+
+===== tester=gpt-5.4-mini impl=gpt-5.4-mini =====
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tmp/tmp.YuvlN9JJw9
+collecting ... collected 9 items
+
+test_reverse.py::test_empty_and_ascii PASSED                             [ 11%]
+test_reverse.py::test_combining_mark_kept_with_base PASSED               [ 22%]
+test_reverse.py::test_precomposed_character PASSED                       [ 33%]
+test_reverse.py::test_multiple_combining_marks PASSED                    [ 44%]
+test_reverse.py::test_emoji_skin_tone_and_emoji PASSED                   [ 55%]
+test_reverse.py::test_flag_pair_stays_together PASSED                    [ 66%]
+test_reverse.py::test_zwj_sequence_stays_together PASSED                 [ 77%]
+test_reverse.py::test_keycap_sequence PASSED                             [ 88%]
+test_reverse.py::test_double_reverse_returns_original PASSED             [100%]
+
+============================== 9 passed in 0.02s ===============================
