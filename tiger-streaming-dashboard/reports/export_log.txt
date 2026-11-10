@@ -1,0 +1,7 @@
+wrote /workspace/mlh-ghw/tiger-streaming-dashboard/reports/extension_and_hypertables.txt (705 bytes)
+wrote /workspace/mlh-ghw/tiger-streaming-dashboard/reports/continuous_aggregates.txt (1324 bytes)
+wrote /workspace/mlh-ghw/tiger-streaming-dashboard/reports/event_counts.txt (1953 bytes)
+wrote /workspace/mlh-ghw/tiger-streaming-dashboard/reports/time_bucket_1min.txt (3039 bytes)
+wrote /workspace/mlh-ghw/tiger-streaming-dashboard/reports/cagg_10s.txt (15430 bytes)
+wrote /workspace/mlh-ghw/tiger-streaming-dashboard/reports/latest_25.txt (3601 bytes)
+wrote /workspace/mlh-ghw/tiger-streaming-dashboard/reports/chunks.txt (677 bytes)

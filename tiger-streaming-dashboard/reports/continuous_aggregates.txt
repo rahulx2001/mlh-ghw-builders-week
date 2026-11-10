@@ -1,0 +1,24 @@
+# Query output generated 2026-11-10 19:32:50 UTC
+# Database: db-73589 (xvtct51t58) @ 127.0.0.1
+# SQL:
+SELECT view_name, materialization_hypertable_name, materialized_only, finalized
+FROM timescaledb_information.continuous_aggregates
+ORDER BY view_name;
+
+SELECT job_id, application_name, schedule_interval, proc_name, scheduled
+FROM timescaledb_information.jobs
+WHERE application_name ILIKE '%live_sensor%'
+   OR proc_name ILIKE '%continuous%'
+ORDER BY job_id;
+
+view_name              | materialization_hypertable_name | materialized_only | finalized
+-----------------------+---------------------------------+-------------------+----------
+live_sensor_stats_10s  | _materialized_hypertable_2      | True              | True     
+live_sensor_stats_1min | _materialized_hypertable_3      | True              | True     
+(2 rows)
+
+job_id | application_name                           | schedule_interval | proc_name                           | scheduled
+-------+--------------------------------------------+-------------------+-------------------------------------+----------
+1000   | Refresh Continuous Aggregate Policy [1000] | 0:00:10           | policy_refresh_continuous_aggregate | True     
+1001   | Refresh Continuous Aggregate Policy [1001] | 0:01:00           | policy_refresh_continuous_aggregate | True     
+(2 rows)

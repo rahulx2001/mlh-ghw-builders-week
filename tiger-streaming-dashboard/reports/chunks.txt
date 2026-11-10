@@ -1,0 +1,13 @@
+# Query output generated 2026-11-10 19:32:50 UTC
+# Database: db-73589 (xvtct51t58) @ 127.0.0.1
+# SQL:
+SELECT hypertable_name, chunk_name, range_start, range_end, is_compressed
+FROM timescaledb_information.chunks
+WHERE hypertable_name IN ('live_sensor_events')
+   OR hypertable_name LIKE '%live_sensor%'
+ORDER BY range_start, chunk_name;
+
+hypertable_name    | chunk_name       | range_start               | range_end                 | is_compressed
+-------------------+------------------+---------------------------+---------------------------+--------------
+live_sensor_events | _hyper_1_1_chunk | 2026-11-05 00:00:00+00:00 | 2026-11-12 00:00:00+00:00 | False        
+(1 rows)

@@ -1,0 +1,18 @@
+# Query output generated 2026-11-10 19:32:50 UTC
+# Database: db-73589 (xvtct51t58) @ 127.0.0.1
+# SQL:
+SELECT extname, extversion FROM pg_extension WHERE extname = 'timescaledb';
+
+SELECT hypertable_schema, hypertable_name, num_dimensions, num_chunks, compression_enabled
+FROM timescaledb_information.hypertables
+ORDER BY hypertable_name;
+
+extname     | extversion
+------------+-----------
+timescaledb | 2.21.3    
+(1 rows)
+
+hypertable_schema | hypertable_name    | num_dimensions | num_chunks | compression_enabled
+------------------+--------------------+----------------+------------+--------------------
+public            | live_sensor_events | 1              | 1          | False              
+(1 rows)
