@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy-Aware RAG Bot</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --line: #2c3a4f;
+      --text: #e8eef7;
+      --muted: #9aa8bc;
+      --ok: #3dd68c;
+      --deny: #ff6b6b;
+      --accent: #7aa2ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, #1b2a46, var(--bg));
+      color: var(--text);
+    }
+    header, main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    .sub { color: var(--muted); margin-bottom: 16px; }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .pill {
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+    .ok { color: var(--ok); }
+    .deny { color: var(--deny); }
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    select, input, button {
+      font: inherit;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--text);
+    }
+    button {
+      background: var(--accent);
+      color: #081018;
+      font-weight: 650;
+      cursor: pointer;
+      border: 0;
+    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    article {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      min-height: 360px;
+    }
+    h2 { margin: 0 0 6px; font-size: 20px; }
+    .meta { color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+    .answer {
+      background: #111826;
+      border-radius: 12px;
+      padding: 12px;
+      line-height: 1.45;
+      margin: 12px 0;
+    }
+    ul { padding-left: 18px; margin: 8px 0; }
+    li.allowed { color: var(--ok); }
+    li.denied { color: var(--deny); }
+    footer { color: var(--muted); font-size: 12px; margin-top: 18px; }
+    @media (max-width: 800px) {
+      .grid, .controls { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Privacy-Aware RAG Bot</h1>
+    <p class="sub">Internal HR / Legal assistant. Documents are filtered with OpenFGA / Auth0 FGA <em>before</em> retrieval. Answers come from a deterministic local responder, not an LLM.</p>
+    <div class="pills">
+      <span class="pill" id="backend">Authorization: loading…</span>
+      <span class="pill">Responder: deterministic-local</span>
+      <span class="pill">Challenge: Auth0 FGA / OpenFGA document access</span>
+    </div>
+    <div class="controls">
+      <select id="query"></select>
+      <input id="custom" placeholder="Or type a custom question" />
+      <button id="ask">Compare Alice vs Bob</button>
+    </div>
+  </header>
+  <main>
+    <div class="grid">
+      <article id="left"></article>
+      <article id="right"></article>
+    </div>
+    <footer>
+      Demo users: Alice (Finance Manager) can view salary and budget documents. Bob (Software Engineer) can view only the employee handbook. Same question, different permitted corpus.
+    </footer>
+  </main>
+  <script>
+    const leftEl = document.getElementById("left");
+    const rightEl = document.getElementById("right");
+    const queryEl = document.getElementById("query");
+    const customEl = document.getElementById("custom");
+
+    function renderCard(target, result, fallbackName) {
+      const allowed = result.allowedDocumentIds.map((id) => `<li class="allowed">allowed: ${id}</li>`).join("");
+      const denied = result.deniedDocumentIds.map((id) => `<li class="denied">denied: ${id}</li>`).join("");
+      const chunks = result.retrievedChunks.map((chunk) => `<li>${chunk.title} (score ${chunk.score})</li>`).join("") || "<li>none</li>";
+      target.innerHTML = `
+        <h2>${fallbackName}</h2>
+        <div class="meta">User: ${result.user} · ${result.authorizationBackend}</div>
+        <div class="answer">${result.answer}</div>
+        <strong>FGA filter (before retrieval)</strong>
+        <ul>${allowed}${denied}</ul>
+        <strong>Retrieved chunks</strong>
+        <ul>${chunks}</ul>
+      `;
+    }
+
+    async function loadMeta() {
+      const meta = await fetch("/api/meta").then((r) => r.json());
+      document.getElementById("backend").textContent = "Authorization: " + meta.authorizationBackend;
+      queryEl.innerHTML = meta.sampleQueries.map((q) => `<option>${q}</option>`).join("");
+      return meta;
+    }
+
+    async function compare() {
+      const query = customEl.value.trim() || queryEl.value;
+      leftEl.textContent = "Checking access and retrieving…";
+      rightEl.textContent = "Checking access and retrieving…";
+      const data = await fetch("/api/compare?query=" + encodeURIComponent(query)).then((r) => r.json());
+      renderCard(leftEl, data.left, "Alice · Finance Manager");
+      renderCard(rightEl, data.right, "Bob · Software Engineer");
+    }
+
+    document.getElementById("ask").addEventListener("click", compare);
+    loadMeta().then(compare);
+  </script>
+</body>
+</html>
