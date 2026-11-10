@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Veto Agent — Token Vault &amp; CIBA</title>
+    <style>
+      :root {
+        --bg: #0f1412;
+        --panel: #18211c;
+        --ink: #e8eee9;
+        --muted: #93a399;
+        --line: #2a3a31;
+        --accent: #7dcea0;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      header {
+        padding: 20px 28px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+      h1 { margin: 0 0 6px; font-size: 26px; font-weight: 650; }
+      .sub { color: var(--muted); max-width: 760px; line-height: 1.45; }
+      .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+      .badge {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 12px;
+        color: var(--accent);
+      }
+      main {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 20px;
+        padding: 20px 28px 32px;
+      }
+      @media (max-width: 900px) {
+        main { grid-template-columns: 1fr; }
+      }
+      .chat, aside {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        min-height: 520px;
+      }
+      .log { padding: 16px; min-height: 390px; max-height: 62vh; overflow: auto; }
+      .msg { margin: 0 0 14px; line-height: 1.45; }
+      .msg .who { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+      .composer { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line); }
+      input[type="text"] {
+        flex: 1;
+        background: #101713;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 12px;
+      }
+      button {
+        background: #234833;
+        color: var(--ink);
+        border: 1px solid #35664a;
+        border-radius: 8px;
+        padding: 10px 14px;
+        cursor: pointer;
+      }
+      button.risk { background: #3a2a16; border-color: #6a4a22; color: #f0d3a2; }
+      button.veto { background: #3a1b1b; border-color: #6a2a2a; color: #f0b2b2; }
+      button.safe { background: #1b3a2a; }
+      .examples { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 12px 12px; }
+      aside { padding: 16px; }
+      aside h2 { margin: 0 0 8px; font-size: 16px; }
+      aside p, aside li { color: var(--muted); font-size: 14px; line-height: 1.45; }
+      .pending {
+        border: 1px solid #c9843b;
+        background: #2a2114;
+        border-radius: 8px;
+        padding: 12px;
+        margin: 16px 0;
+      }
+      .pending strong { color: #f0d3a2; }
+      .actions { display: flex; gap: 8px; margin-top: 10px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>The Veto Agent</h1>
+      <p class="sub">
+        An AI-agent stand-in that reads Google Calendar through Auth0 Token Vault,
+        and pauses high-impact actions until you approve or veto them out-of-band
+        with CIBA (Client-Initiated Backchannel Authentication).
+      </p>
+      <div class="badges">
+        <span class="badge" id="responder">Deterministic local responder — no LLM</span>
+        <span class="badge" id="mode">Mode: …</span>
+        <span class="badge" id="domain">Tenant: …</span>
+        <span class="badge" id="connection">Connection: …</span>
+      </div>
+    </header>
+    <main>
+      <section class="chat">
+        <div class="log" id="log"></div>
+        <div class="examples">
+          <button class="safe" data-fill="What's on my calendar?">What's on my calendar?</button>
+          <button class="risk" data-fill="Schedule a meeting with the CEO">Schedule a meeting with the CEO</button>
+          <button class="risk" data-fill="Delete all unread emails">Delete all unread emails</button>
+        </div>
+        <form class="composer" id="form">
+          <input id="input" type="text" placeholder="Ask the agent…" autocomplete="off" />
+          <button type="submit">Send</button>
+        </form>
+      </section>
+      <aside>
+        <h2>How this meets the challenge</h2>
+        <ul>
+          <li><strong style="color:var(--accent)">Token Vault</strong> exchanges an Auth0 refresh token for a Google access token before any calendar call.</li>
+          <li><strong style="color:var(--accent)">CIBA</strong> sends an out-of-band approval for CEO meetings and unread-mail deletion. The tool does not run until you approve it.</li>
+          <li>A veto returns access_denied and the side effect is skipped.</li>
+        </ul>
+        <div class="pending" id="pending" hidden>
+          <strong>Waiting for your decision</strong>
+          <p id="pendingText"></p>
+          <div class="actions" id="demoActions" hidden>
+            <button class="safe" id="approve">Approve</button>
+            <button class="veto" id="veto">Veto</button>
+          </div>
+          <p id="liveHint" hidden>Approve or veto this request in the Auth0 Guardian app (or CIBA email) on your enrolled device.</p>
+        </div>
+      </aside>
+    </main>
+    <script>
+      const logEl = document.getElementById("log");
+      const pendingEl = document.getElementById("pending");
+      const pendingText = document.getElementById("pendingText");
+      const demoActions = document.getElementById("demoActions");
+      const liveHint = document.getElementById("liveHint");
+      let threadId = crypto.randomUUID();
+      let demoMode = true;
+
+      function renderThread(thread) {
+        logEl.innerHTML = "";
+        for (const msg of thread.messages) {
+          const div = document.createElement("div");
+          div.className = "msg " + msg.role;
+          div.innerHTML = '<div class="who"></div><div class="bubble"></div>';
+          div.querySelector(".who").textContent = msg.role === "user" ? "You" : "Veto Agent";
+          div.querySelector(".bubble").textContent = msg.text;
+          logEl.appendChild(div);
+        }
+        logEl.scrollTop = logEl.scrollHeight;
+        if (thread.pending) {
+          pendingEl.hidden = false;
+          pendingText.textContent = thread.pending.bindingMessage +
+            (thread.pending.authReqId ? " (auth_req_id: " + thread.pending.authReqId + ")" : "");
+          demoActions.hidden = !demoMode;
+          liveHint.hidden = demoMode;
+        } else {
+          pendingEl.hidden = true;
+        }
+      }
+
+      async function post(url, body) {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body || {}),
+        });
+        return res.json();
+      }
+
+      async function bootstrap() {
+        const meta = await fetch("/api/meta").then((r) => r.json());
+        demoMode = Boolean(meta.demoMode);
+        document.getElementById("mode").textContent = demoMode
+          ? "Mode: AUTH0_DEMO_MODE (Auth0 HTTP mocked)"
+          : "Mode: live Auth0 tenant";
+        document.getElementById("domain").textContent = "Tenant: " + meta.tenantDomain;
+        document.getElementById("connection").textContent = "Connection: " + meta.connection;
+        const intro = document.createElement("div");
+        intro.className = "msg system";
+        intro.innerHTML = '<div class="who">System</div><div class="bubble"></div>';
+        intro.querySelector(".bubble").textContent = meta.responder;
+        logEl.appendChild(intro);
+      }
+
+      document.getElementById("form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const input = document.getElementById("input");
+        const message = input.value.trim();
+        if (!message) return;
+        input.value = "";
+        const result = await post("/api/chat", { threadId, message });
+        threadId = result.thread.id;
+        renderThread(result.thread);
+      });
+
+      document.querySelectorAll("[data-fill]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.getElementById("input").value = btn.getAttribute("data-fill");
+          document.getElementById("form").requestSubmit();
+        });
+      });
+
+      document.getElementById("approve").addEventListener("click", async () => {
+        const result = await post("/api/threads/" + threadId + "/decide", { decision: "approved" });
+        renderThread(result.thread);
+      });
+      document.getElementById("veto").addEventListener("click", async () => {
+        const result = await post("/api/threads/" + threadId + "/decide", { decision: "denied" });
+        renderThread(result.thread);
+      });
+
+      bootstrap();
+    </script>
+  </body>
+</html>
